@@ -75,18 +75,10 @@ private static final String USERNAME = "root";
 private static final String PASSWORD = "your_password";
 ```
 
-**3. Run Desktop Application**
+**3. Compile and Run**
 
 ```powershell
-# Windows
-run.bat
-
-# Or manually:
-cd d:\TejasPC\MazeBank
-java -cp "bin;lib/*" com.mazebank.Main
-```
-
-### RESTful API Deployment (Apache Tomcat 10.1.28)
+# NaRESTful API Deployment (Apache Tomcat 10.1.28)
 
 **Implemented Servlets (8 Total):**
 
@@ -150,51 +142,20 @@ curl.exe "http://localhost:8080/MazeBank/api/transactions"
 curl.exe "http://localhost:8080/MazeBank/api/logout"
 ```
 
-## API Endpoints Reference
+**Desktop GUI Application:**
 
-| Method | Endpoint | Purpose | Parameters |
-|--------|----------|---------|------------|
-| POST | `/api/login` | User authentication | username, password |
-| POST | `/api/register` | User registration | username, email, password, fullName |
-| GET | `/api/session` | Validate session & get profile | sessionId (cookie) |
-| GET/POST | `/api/logout` | Logout user | sessionId (cookie) |
-| GET | `/api/account` | List user accounts | sessionId (cookie) |
-| GET | `/api/account/{id}` | Get account details | id (path), sessionId (cookie) |
-| POST | `/api/account` | Create new account | accountType, initialBalance |
-| POST | `/api/transfer` | Transfer funds | fromAccountId, toAccountId, amount, description |
-| GET | `/api/transactions` | View all transactions | sessionId (cookie) |
-| GET | `/api/transactions/account/{id}` | Account transactions | id (path) |
-| POST | `/api/deposit` | Deposit funds | accountId, amount |
-| POST | `/api/withdraw` | Withdraw funds | accountId, amount |
+Or simply run the Swing GUIOT/     # optional static html pages if you add them
+```
+4) Deploy to Tomcat: copy `bin` classes into `webapps/mazebank/WEB-INF/classes` and `lib/*` into `WEB-INF/lib`, or package as WAR if you prefer.
 
-### Expected Response Format
-
-**Success Response:**
-```json
-{
-  "success": true,
-  "message": "Operation successful",
-  "data": { /* response data */ }
-}
+Example cURL:
+```bash
+curl -i -c cookies.txt -X POST "http://localhost:8080/mazebank/api/login" -d "username=Admin&password=admin123"
+curl -i -b cookies.txt "http://localhost:8080/mazebank/api/balance"
+curl -i -b cookies.txt -X POST "http://localhost:8080/mazebank/api/transfer" -d "fromAccountNumber=ACC1&toAccountNumber=ACC2&amount=100"
 ```
 
-**Error Response:**
-```json
-{
-  "success": false,
-  "message": "Error description",
-  "error": "Error details"
-}
-```
-
-## Security Features
-
-- ✅ Session-based authentication with 30-minute timeout
-- ✅ Per-account transaction locks for thread safety
-- ✅ Prepared statements to prevent SQL injection
-- ✅ BigDecimal for precise monetary calculations
-- ✅ Role-based access control (ADMIN/CUSTOMER)
-- ✅ HttpOnly cookies for session protection
+Or simply run: `run.bat`
 
 ## Default Login
 
@@ -282,59 +243,29 @@ MazeBank/
 │   │   ├── UserDAO.java
 │   │   ├── ITransactionDAO.java
 │   │   ├── TransactionDAO.java
-│  System Requirements
-
-- **Java**: JDK 23 or higher
-- **Servlet Container**: Apache Tomcat 10.1.28+ (for API deployment)
-- **Database**: MySQL 5.7+
-- **Memory**: 512MB minimum, 1GB recommended
-- **Network**: Port 8080 (default Tomcat), Port 3306 (MySQL)
-
-## Troubleshooting
-
-### Database Connection Failed
-- Verify MySQL is running on port 3306
-- Check credentials in `DatabaseConnection.java`
-- Ensure `mazebank_db` database exists
-- Test connection: `mysql -u root -p mazebank_db`
-
-### JDBC Driver Not Found
-- Download MySQL Connector/J from [official site](https://dev.mysql.com/downloads/connector/j/)
-- Place JAR in `lib/` folder
-- Verify classpath includes `lib/*`
-
-### Port 8080 Already in Use (Tomcat)
-- Change Tomcat port in `conf/server.xml`:
-  ```xml
-  <Connector port="8081" protocol="HTTP/1.1" ...
-  ```
-- Or stop the conflicting process:
-  ```powershell
-  netstat -ano | findstr :8080
-  taskkill /PID <process_id> /F
-  ```
-
-### API Returns 404 Not Found
-- Verify context path is correct: `http://localhost:8080/MazeBank/api/endpoint`
-- Check Tomcat logs in `logs/catalina.log`
-- Ensure MazeBank app is deployed in `webapps/MazeBank`
-
-### Compilation Errors
-```powershell
-# Clean build from project root:
-cd d:\TejasPC\MazeBank
-Remove-Item -Recurse -Force bin
-mkdir bin
-javac -d bin -cp "lib/*" src/com/mazebank/**/*.java
+│   │   ├── IBankingServiceDAO.java
+│   │   └── BankingServiceDAO.java
+│   ├── service/                # Business logic
+│   │   └── TransactionService.java (thread-safe transfers)
+│   ├── exceptions/             # Custom exceptions
+│   │   ├── InsufficientFundsException.java
+│   │   └── InvalidTransactionException.java
+│   ├── ui/                     # User interface
+│   │   ├── LoginFrame.java
+│   │   ├── RegistrationFrame.java
+│   │   ├── CustomerDashboard.java
+│   │   └── AdminDashboard.java
+│   └── util/                   # Utilities
+│       ├── DatabaseConnection.java
+│       └── TransactionProcessor.java
+├── database/
+│   └── schema.sql
+├── lib/
+│   └── mysql-connector-j-8.0.33.jar
+└── screenshots/
 ```
 
-## Acknowledgments
-
-- **GUVI Geek Network** - Project guidance
-- **Apache Tomcat** - Servlet container
-- **MySQL** - Database management
-- **Oracle JDK** - Java Development Kit
-- **Jackson Project** - JSON processing
+## Database Schema
 
 **Tables**
 - `users` - User accounts with roles (admin/customer)
