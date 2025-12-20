@@ -78,7 +78,15 @@ private static final String PASSWORD = "your_password";
 **3. Compile and Run**
 
 ```powershell
-# NaRESTful API Deployment (Apache Tomcat 10.1.28)
+# Navigate to project
+cd d:\TejasPC\MazeBank
+
+# Compile all sources
+$srcs = Get-ChildItem -Recurse -Path src -Filter *.java | ForEach-Object { $_.FullName }
+javac -d bin -cp "lib/*" $srcs
+```
+
+### RESTful API Deployment (Apache Tomcat 10.1.28)
 
 **Implemented Servlets (8 Total):**
 
@@ -142,20 +150,24 @@ curl.exe "http://localhost:8080/MazeBank/api/transactions"
 curl.exe "http://localhost:8080/MazeBank/api/logout"
 ```
 
-**Desktop GUI Application:**
+### Run Desktop Application
 
-Or simply run the Swing GUIOT/     # optional static html pages if you add them
+**Quick Start:**
+```powershell
+# Windows
+run.bat
+
+# Or manually:
+cd d:\TejasPC\MazeBank
+java -cp "bin;lib/*" com.mazebank.Main
 ```
-4) Deploy to Tomcat: copy `bin` classes into `webapps/mazebank/WEB-INF/classes` and `lib/*` into `WEB-INF/lib`, or package as WAR if you prefer.
 
-Example cURL:
-```bash
-curl -i -c cookies.txt -X POST "http://localhost:8080/mazebank/api/login" -d "username=Admin&password=admin123"
-curl -i -b cookies.txt "http://localhost:8080/mazebank/api/balance"
-curl -i -b cookies.txt -X POST "http://localhost:8080/mazebank/api/transfer" -d "fromAccountNumber=ACC1&toAccountNumber=ACC2&amount=100"
-```
+**Prerequisites for Desktop GUI:**
+- Java JDK 23 installed
+- MySQL Server running with `mazebank_db` database
+- MySQL Connector/J in `lib/` folder
 
-Or simply run: `run.bat`
+This will launch the Swing GUI application with full banking functionality.
 
 ## Default Login
 
@@ -191,7 +203,19 @@ Or simply run: `run.bat`
 ![Profile Management](screenshots/profile-management.png)
 *Update personal details and change password securely*
 
-### Admiservlet/                # RESTful API servlets
+### Admin Dashboard
+![Admin Dashboard](screenshots/admin-dashboard.png)
+*System statistics and user management overview*
+
+### User Management
+![User Management](screenshots/user-management.png)
+*Add, edit, and manage user accounts*
+
+### Service Approval (Admin)
+![Service Approval](screenshots/service-approval.png)
+*Review and approve or reject customer service applications*
+
+## Project Structure
 │   │   ├── LoginServlet.java
 │   │   ├── RegistrationServlet.java
 │   │   ├── LogoutServlet.java
