@@ -106,13 +106,23 @@ javac -d bin -cp "lib/*" $srcs
    - Java JDK 23
    - MySQL Server running with `mazebank_db` database
 
-2. **Start Tomcat Server:**
+2. **Create WAR File:**
+```powershell
+jar -cvf MazeBank.war -C war_build .
+```
+
+3. **Deploy WAR to Tomcat:**
+```powershell
+copy MazeBank.war C:\tomcat\apache-tomcat-10.1.28\webapps\
+```
+
+4. **Start Tomcat Server:**
 ```powershell
 cd C:\tomcat\apache-tomcat-10.1.28
 bin\catalina.bat run
 ```
 
-3. **Verify Deployment:**
+5. **Verify Deployment:**
    - Server should start on port 8080
    - MazeBank app deployed at `http://localhost:8080/MazeBank/api`
 
