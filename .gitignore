@@ -4,17 +4,22 @@ bin/
 target/
 out/
 
-# Package Files
-*.jar
+# Build artifacts
+war_build/
 *.war
-*.nar
+*.jar
 *.ear
 *.zip
 *.tar.gz
 *.rar
 
+# Build summary files
+BUILD_SUMMARY.txt
+DEPLOYMENT_COMPLETE.txt
+
 # Virtual machine crash logs
 hs_err_pid*
+replay_pid*
 
 # IDE specific files
 .idea/
@@ -40,24 +45,36 @@ dist/
 nbdist/
 .nb-gradle/
 
+# IntelliJ
+*.iws
+/out/
+
 # OS specific
 .DS_Store
 Thumbs.db
 desktop.ini
+ehthumbs.db
 
 # Logs
 *.log
+logs/
 
 # Temporary files
 *.tmp
 *.bak
 *.old
+*.swp
+*~
+
+# Tomcat
+tomcat/
+work/
 
 # Database
 # Uncomment if you don't want to share database credentials
 # src/com/mazebank/util/DatabaseConnection.java
 
-# Note: Keep the lib folder structure but exclude the JAR file
-# Users need to download MySQL connector themselves
+# Dependencies (users must download these)
 lib/*.jar
 !lib/DOWNLOAD_JDBC_DRIVER.md
+!lib/sources.txt
