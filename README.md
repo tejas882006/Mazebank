@@ -235,51 +235,19 @@ This will launch the Swing GUI application with full banking functionality.
 *Review and approve or reject customer service applications*
 
 ## Project Structure
-│   │   ├── LoginServlet.java
-│   │   ├── RegistrationServlet.java
-│   │   ├── LogoutServlet.java
-│   │   ├── SessionServlet.java
-│   │   ├── AccountServlet.java
-│   │   ├── TransactionServlet.java
-│   │   ├── DepositServlet.java
-│   │   └── WithdrawServlet.java
-│   ├── exceptions/             # Custom exceptions
-│   │   ├── InsufficientFundsException.java
-│   │   └── InvalidTransactionException.java
-│   ├── ui/                     # User interface (Swing)
-│   │   ├── LoginFrame.java
-│   │   ├── RegistrationFrame.java
-│   │   ├── CustomerDashboard.java
-│   │   └── AdminDashboard.java
-│   └── util/                   # Utilities
-│       ├── DatabaseConnection.java
-│       └── TransactionProcessor.java
-├── web/WEB-INF/
-│   └── web.xml                 # Servlet configuration
-├── war_build/                  # WAR deployment package
-│   ├── WEB-INF/
-│   │   ├── classes/            # Compiled servlet classes
-│   │   ├── lib/                # Dependencies (Jackson, JDBC)
-│   │   └── web.xml
-├── database/
-│   └── schema.sql
-├── lib/
-│   ├── mysql-connector-j-8.0.33.jar
-│   ├── jakarta.servlet-api-5.0.0.jar
-│   ├── jackson-databind-2.16.0.jar
-│   ├── jackson-core-2.16.0.jar
-│   └── jackson-annotations-2.16.0
+
+```
 MazeBank/
 ├── src/com/mazebank/
-│   ├── Main.java
-│   ├── model/                  # Data models
+│   ├── Main.java                      # Desktop GUI entry point
+│   ├── model/                         # Data models
 │   │   ├── Account.java (base class)
 │   │   ├── SavingsAccount.java
 │   │   ├── CurrentAccount.java
 │   │   ├── User.java
 │   │   ├── Transaction.java
 │   │   └── BankingService.java
-│   ├── dao/                    # DAO interfaces + implementations
+│   ├── dao/                           # DAO interfaces + implementations
 │   │   ├── IAccountDAO.java
 │   │   ├── AccountDAO.java
 │   │   ├── IUserDAO.java
@@ -288,24 +256,63 @@ MazeBank/
 │   │   ├── TransactionDAO.java
 │   │   ├── IBankingServiceDAO.java
 │   │   └── BankingServiceDAO.java
-│   ├── service/                # Business logic
-│   │   └── TransactionService.java (thread-safe transfers)
-│   ├── exceptions/             # Custom exceptions
+│   ├── service/                       # Business logic
+│   │   └── TransactionService.java    # Thread-safe fund transfers
+│   ├── servlet/                       # REST API endpoints (Tomcat)
+│   │   ├── LoginServlet.java          # POST /api/login
+│   │   ├── RegistrationServlet.java   # POST /api/register
+│   │   ├── LogoutServlet.java         # GET/POST /api/logout
+│   │   ├── SessionServlet.java        # GET /api/session
+│   │   ├── AccountServlet.java        # GET/POST /api/account
+│   │   ├── TransactionServlet.java    # POST /api/transfer, GET /api/transactions
+│   │   ├── DepositServlet.java        # POST /api/deposit
+│   │   └── WithdrawServlet.java       # POST /api/withdraw
+│   ├── exceptions/                    # Custom exceptions
 │   │   ├── InsufficientFundsException.java
 │   │   └── InvalidTransactionException.java
-│   ├── ui/                     # User interface
+│   ├── ui/                            # Desktop UI (Swing)
 │   │   ├── LoginFrame.java
 │   │   ├── RegistrationFrame.java
 │   │   ├── CustomerDashboard.java
 │   │   └── AdminDashboard.java
-│   └── util/                   # Utilities
-│       ├── DatabaseConnection.java
-│       └── TransactionProcessor.java
+│   └── util/                          # Utilities
+│       ├── DatabaseConnection.java    # JDBC connection manager
+│       └── TransactionProcessor.java  # Background transaction processor
+├── web/WEB-INF/
+│   └── web.xml                        # Servlet configuration & mappings
+├── war_build/                         # WAR deployment structure
+│   ├── WEB-INF/
+│   │   ├── classes/                   # Compiled servlet & model classes
+│   │   ├── lib/                       # Bundled dependencies (Jackson, JDBC)
+│   │   └── web.xml
+│   └── META-INF/
 ├── database/
-│   └── schema.sql
-├── lib/
-│   └── mysql-connector-j-8.0.33.jar
-└── screenshots/
+│   ├── schema.sql                     # MySQL database schema
+│   └── test_queries.sql               # Sample queries
+├── lib/                               # Project dependencies
+│   ├── mysql-connector-j-8.0.33.jar
+│   ├── jakarta.servlet-api-5.0.0.jar
+│   ├── jackson-databind-2.16.0.jar
+│   ├── jackson-core-2.16.0.jar
+│   ├── jackson-annotations-2.16.0.jar
+│   ├── DOWNLOAD_JDBC_DRIVER.md
+│   └── sources.txt
+├── bin/                               # Compiled classes (created on build)
+├── MazeBank.war                       # Packaged WAR for Tomcat deployment
+├── deploy-war.bat                     # Automated WAR build & deploy script
+├── run.bat                            # Windows script to run desktop app
+├── run.sh                             # Linux/Mac script to run desktop app
+├── README.md                          # This file
+└── screenshots/                       # UI screenshots
+    ├── login.png
+    ├── customer-dashboard.png
+    ├── transactions.png
+    ├── banking-services.png
+    ├── profile-management.png
+    ├── admin-dashboard.png
+    ├── user-management.png
+    └── service-approval.png
+```
 ```
 
 ## Database Schema
