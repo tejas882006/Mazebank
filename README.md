@@ -106,10 +106,18 @@ javac -d bin -cp "lib/*" $srcs
    - Java JDK 23
    - MySQL Server running with `mazebank_db` database
 
-2. **Create WAR File:**
+2. **Create + Deploy WAR (Quick Option):**
 ```powershell
-jar -cvf MazeBank.war -C war_build .
+# From project root (Windows)
+d:\TejasPC\MazeBank\deploy-war.bat
 ```
+
+This script will:
+- Compile all sources into `war_build/WEB-INF/classes`
+- Bundle required libs into `war_build/WEB-INF/lib`
+- Package `MazeBank.war`
+- Copy to `%TOMCAT_HOME%\webapps` (defaults to `C:\tomcat\apache-tomcat-10.1.28`)
+- Start Tomcat in foreground
 
 3. **Deploy WAR to Tomcat:**
 ```powershell
@@ -118,6 +126,7 @@ copy MazeBank.war C:\tomcat\apache-tomcat-10.1.28\webapps\
 
 4. **Start Tomcat Server:**
 ```powershell
+# If not using deploy-war.bat
 cd C:\tomcat\apache-tomcat-10.1.28
 bin\catalina.bat run
 ```
@@ -132,32 +141,32 @@ bin\catalina.bat run
 # Test login endpoint (GET - should return 405)
 curl.exe -i http://localhost:8080/MazeBank/api/login
 
-# Authenticate user (POST)
-curl.exe -X POST "http://localhost:8080/MazeBank/api/login?username=admin&password=admin123"
+# Authenticate user (POST) and store session cookie
+curl.exe -i -c cookie.txt -X POST "http://localhost:8080/MazeBank/api/login?username=admin&password=admin123"
 
 # Register new user
 curl.exe -X POST "http://localhost:8080/MazeBank/api/register?username=john&email=john@test.com&password=pass123&fullName=John Doe"
 
-# Get user accounts (requires sessionId from login response)
-curl.exe "http://localhost:8080/MazeBank/api/account?sessionId=YOUR_SESSION_ID"
+# Get user accounts (requires JSESSIONID cookie)
+curl.exe -i -b cookie.txt "http://localhost:8080/MazeBank/api/account"
 
 # Create new account
-curl.exe -X POST "http://localhost:8080/MazeBank/api/account?accountType=SAVINGS&initialBalance=1000"
+curl.exe -i -b cookie.txt -X POST "http://localhost:8080/MazeBank/api/account?accountType=SAVINGS&initialBalance=1000"
 
 # Deposit funds
-curl.exe -X POST "http://localhost:8080/MazeBank/api/deposit?accountId=1&amount=500"
+curl.exe -i -b cookie.txt -X POST "http://localhost:8080/MazeBank/api/deposit?accountId=1&amount=500"
 
 # Withdraw funds
-curl.exe -X POST "http://localhost:8080/MazeBank/api/withdraw?accountId=1&amount=200"
+curl.exe -i -b cookie.txt -X POST "http://localhost:8080/MazeBank/api/withdraw?accountId=1&amount=200"
 
 # Transfer funds
-curl.exe -X POST "http://localhost:8080/MazeBank/api/transfer?fromAccountId=1&toAccountId=2&amount=100&description=Payment"
+curl.exe -i -b cookie.txt -X POST "http://localhost:8080/MazeBank/api/transfer?fromAccountId=1&toAccountId=2&amount=100&description=Payment"
 
 # Get transaction history
-curl.exe "http://localhost:8080/MazeBank/api/transactions"
+curl.exe -i -b cookie.txt "http://localhost:8080/MazeBank/api/transactions"
 
-# Logout
-curl.exe "http://localhost:8080/MazeBank/api/logout"
+# Logout (clears session)
+curl.exe -i -b cookie.txt "http://localhost:8080/MazeBank/api/logout"
 ```
 
 ### Run Desktop Application
