@@ -1,3 +1,30 @@
+# Java build outputs
+bin/
+war_build/
+MazeBank.war
+
+# Java class files
+*.class
+
+# Logs & temp
+*.log
+*.tmp
+*.cache
+
+# IDE/editor configs
+.vscode/
+*.code-workspace
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Note: Dependencies in lib/ are intentionally tracked for now
+# If you move to Maven/Gradle, replace lib/ with dependency management
+# and then you can ignore lib/*.jar safely.
 # Compiled class files
 *.class
 bin/
